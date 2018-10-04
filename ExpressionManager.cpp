@@ -126,21 +126,38 @@ int getOperatorPrecedence(string op)
 
 bool process_operator(stack<string> &opStack, string &postfix, string &op)
 {
+    //cout << "postfix str: " << "\"" << postfix << "\"" << endl;
+    //cout << "op str: " << "\"" << op << "\"" << endl;
     if (!opStack.empty())
-        {
-             if(opStack.empty() || isBracketOpen(opStack.top()) || isBracketOpen(op))
+    {
+        if(opStack.empty() || isBracketOpen(opStack.top()) || isBracketOpen(op))
         {
             opStack.push(op);
             return true;
         }
-        else if(isBracketClosed && !opStack.empty())
+        else if(isBracketClosed)
         {
-        while(getCounterpart(opStack.top().at(0)) != op.at(0))
+        while (true)
             {
-                if (opStack.empty())
-                    return false;
-                postfix = postfix + opStack.top() + " ";
-                opStack.pop();
+                if (!opStack.empty())
+                {
+                    if (getCounterpart(opStack.top().at(0)) != op.at(0))
+                    {
+                        postfix = postfix + opStack.top() + " ";
+                        opStack.pop();
+                    }
+                    else
+                    {
+                        postfix = postfix + opStack.top() + " ";
+                        opStack.pop();
+                        return true;
+                        break;
+                    }
+                }
+                else
+                { 
+                    return false; //this is being returned when it shouldnt
+                }
             }
             
             opStack.pop();
@@ -184,7 +201,7 @@ bool ExpressionManager::isBalanced(string expression)
                 balanced = false;
                 return false;
             }
-            if (getCounterpart(expEval.top()) == c)
+            else if (getCounterpart(expEval.top()) == c)
             {
                 expEval.pop();
             }
@@ -258,7 +275,8 @@ string ExpressionManager::postfixToInfix(string postfixExpression)
             cout << "hello there was an error 1" << endl;
         }
     }
-    return (opperands.top());
+    if(!opperands.empty())
+        return (opperands.top());
 }
 
 string ExpressionManager::postfixEvaluate(string postfixExpression)
@@ -317,13 +335,16 @@ string ExpressionManager::postfixEvaluate(string postfixExpression)
             cout << "hello there was an error 2" << endl;
         }
     }
-    return (to_string(opperands.top()));
+    if(!opperands.empty())
+        return (to_string(opperands.top()));
 }
 
 string ExpressionManager::infixToPostfix(string infixExpression)
 {
     string postfix = "";
     stack<string> opperators;
+    //opperators.push(" ");
+    //opperators.pop();
     vector<string> tokens = parseTokens(infixExpression);
     
      for (string s : tokens)
