@@ -86,9 +86,82 @@ int evaluate(int opp1, int opp2, string opperator)
     }
 }
 
+bool isBracketOpen(string bracket)
+{
+    if (bracket == "(" || bracket == "{" || bracket == "[")
+    {
+        return true;
+    }
+    return false;
+}
+
+bool isBracketClosed(string bracket)
+{
+    if (bracket == ")" || bracket == "}" || bracket == "]")
+    {
+        return true;
+    }
+    return false;
+}
+
 bool is_of_some(string encompassing_string, const string s){
   return s.find_first_not_of(encompassing_string) == string::npos;
 }
+
+int getOperatorPrecedence(string op)
+{
+    if(is_of_some("*/%", op))
+    {
+        return 1;
+    }
+    else if(is_of_some("+-", op))
+    {
+        return 2;
+    }
+    else
+    {
+        return 3;
+    }
+}
+
+bool process_operator(stack<string> &opStack, string &postfix, string &op)
+{
+    if (!opStack.empty())
+        {
+             if(opStack.empty() || isBracketOpen(opStack.top()) || isBracketOpen(op))
+        {
+            opStack.push(op);
+            return true;
+        }
+        else if(isBracketClosed && !opStack.empty())
+        {
+        while(getCounterpart(opStack.top().at(0)) != op.at(0))
+            {
+                if (opStack.empty())
+                    return false;
+                postfix = postfix + opStack.top() + " ";
+                opStack.pop();
+            }
+            
+            opStack.pop();
+            return true;
+        }
+        else
+        {
+            while (getOperatorPrecedence(op) >= getOperatorPrecedence(opStack.top()))
+            {
+                postfix = postfix + opStack.top();
+                opStack.pop();
+            }
+            opStack.push(op);
+            return true;
+        }
+    }
+    opStack.push(op);
+    return true;
+}
+
+//SEGMENTATION FAULT SOMEWHERE ABOVE
 
 bool ExpressionManager::isBalanced(string expression)
 {
@@ -182,7 +255,7 @@ string ExpressionManager::postfixToInfix(string postfixExpression)
         }
         else
         {
-            cout << "hello there was an error" << endl;
+            cout << "hello there was an error 1" << endl;
         }
     }
     return (opperands.top());
@@ -241,7 +314,7 @@ string ExpressionManager::postfixEvaluate(string postfixExpression)
         }
         else
         {
-            cout << "hello there was an error" << endl;
+            cout << "hello there was an error 2" << endl;
         }
     }
     return (to_string(opperands.top()));
@@ -249,6 +322,48 @@ string ExpressionManager::postfixEvaluate(string postfixExpression)
 
 string ExpressionManager::infixToPostfix(string infixExpression)
 {
+    string postfix = "";
+    stack<string> opperators;
+    vector<string> tokens = parseTokens(infixExpression);
     
+     for (string s : tokens)
+    {
+        string sStr0 = s.substr(0, 1);
+        
+        if (sStr0 == "")
+        {
+            cout << "surprise sStr0 = \"\"" << endl;
+        }
+        else if (is_of_some("1234567890", sStr0))
+        {
+            postfix = postfix + s + " ";
+        }
+        else if (is_of_some("(+-/*%)", sStr0))
+        {
+            if (!process_operator(opperators, postfix, sStr0))
+            {
+                cout << "process operator error my lad" << endl;
+            }
+        }
+        else
+        {
+            cout << "hello there was an error 3: " << sStr0 << endl;
+        }
+    }
+    while (!opperators.empty())
+    {
+        postfix = postfix + opperators.top();
+        opperators.pop();
+        if (opperators.size() > 0)
+        {
+            postfix = postfix + " ";
+        }
+    }
+    if (!isBalanced(postfix))
+    {
+        postfix = "Wow " + postfix;
+            cout << "invalid postfix after conversion from in to post" << endl;
+    }
+    return postfix;
 }
 
