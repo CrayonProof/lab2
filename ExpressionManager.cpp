@@ -131,6 +131,61 @@ bool ExpressionManager::isBalanced(string expression)
 
 string ExpressionManager::postfixToInfix(string postfixExpression)
 {
+    stack<string> opperands;
+    vector<string> tokens = parseTokens(postfixExpression);
+    
+    for (string s : tokens)
+    {
+        string sStr0 = s.substr(0, 1); //grabs the first character, maybe suppsoed to be first string?
+        
+        //cout << "sStr0: " << "\"" << s << "\"" << endl;
+        
+        if (sStr0 == "")
+        {
+            cout << "surprise sStr0 = \"\"" << endl;
+        }
+        else if (is_of_some("1234567890", sStr0))
+        {
+            //cout << "sStr0: " << "\"" << sStr0 << "\"" << endl;
+            opperands.push(s);
+        }
+        else if (is_of_some("+-/*%", sStr0))
+        {
+            /*DEBUGGING PURPOSES ONLY, PRINT VECTOR
+            
+            vector<int> viewStack;
+            
+            while (!opperands.empty())
+            {
+                viewStack.push_back(opperands.top());
+                opperands.pop();
+            }
+            for (int i = viewStack.size() - 1; i >= 0; i--)
+            {
+                cout << viewStack.at(i) << ", ";
+                opperands.push(viewStack.at(i));
+            }
+        
+            cout << sStr0 << endl;
+            
+            DEBUGGING PURPOSES ONLY END
+            */
+            
+            if (opperands.size() > 1)
+            {
+                string opp2 = opperands.top();
+                opperands.pop();
+                string opp1 = opperands.top();
+                opperands.pop();
+                opperands.push("( " + opp1 + " " + sStr0 + " " + opp2 + " )");
+            }
+        }
+        else
+        {
+            cout << "hello there was an error" << endl;
+        }
+    }
+    return (opperands.top());
 }
 
 string ExpressionManager::postfixEvaluate(string postfixExpression)
