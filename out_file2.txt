@@ -1,16 +1,16 @@
 postfixEvaluate 40 2 4 + 1 1 + - * 4 2 / 1 / - 7 %
-  4
+  invalid
 postfixEvaluate 34 90 / 4 - 65 3 * /
-  0
+  invalid
 postfixEvaluate 1 5 - 2 / 89 -
-  -91
+  invalid
 postfixEvaluate 100 50 6 10 - 10 * / /
-  -100
+  invalid
 postfixEvaluate 5 5 5 5 5 5 5 - - - - - -
-  5
+  invalid
 postfixEvaluate 1
-  1
+  invalid
 postfixEvaluate 0 3 2 + *
-  0
+  invalid
 postfixEvaluate 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 42 / + % + % / + % + % / + % + % / + % + % / + % + % / + % + % / + % + % / + % + % /
-  1
+  invalid

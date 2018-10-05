@@ -135,9 +135,10 @@ bool process_operator(stack<string> &opStack, string &postfix, string &op)
             opStack.push(op);
             return true;
         }
-        else if(isBracketClosed)
+        else if(isBracketClosed(op))
         {
-        while (true)
+            /*
+            while (true)
             {
                 if (!opStack.empty())
                 {
@@ -148,7 +149,6 @@ bool process_operator(stack<string> &opStack, string &postfix, string &op)
                     }
                     else
                     {
-                        postfix = postfix + opStack.top() + " ";
                         opStack.pop();
                         return true;
                         break;
@@ -156,19 +156,33 @@ bool process_operator(stack<string> &opStack, string &postfix, string &op)
                 }
                 else
                 { 
+                    cout << "operator that returned false: " << "\"" << op << "\"" << endl;
                     return false; //this is being returned when it shouldnt
                 }
             }
-            
+                
+                opStack.pop();
+                return true;
+            */
+            while (getCounterpart(opStack.top().at(0)) != op.at(0)) //maybe something wrong with comparison
+            {
+                postfix = postfix + opStack.top() + " ";
+                opStack.pop();
+                if (opStack.empty())
+                    return false;
+            }
             opStack.pop();
             return true;
+            
         }
         else
         {
             while (getOperatorPrecedence(op) >= getOperatorPrecedence(opStack.top()))
             {
-                postfix = postfix + opStack.top();
+                postfix = postfix + opStack.top() + " ";
                 opStack.pop();
+                if (opStack.empty())
+                    break;
             }
             opStack.push(op);
             return true;
@@ -273,6 +287,7 @@ string ExpressionManager::postfixToInfix(string postfixExpression)
         else
         {
             cout << "hello there was an error 1" << endl;
+            return "invalid";
         }
     }
     if(!opperands.empty())
@@ -283,6 +298,11 @@ string ExpressionManager::postfixEvaluate(string postfixExpression)
 {
     stack<int> opperands;
     vector<string> tokens = parseTokens(postfixExpression);
+    
+    if (!is_of_some("1234567890", tokens.at(0).substr(0, 1)))
+    {
+        return "invalid";
+    }
     
     for (string s : tokens)
     {
@@ -333,6 +353,7 @@ string ExpressionManager::postfixEvaluate(string postfixExpression)
         else
         {
             cout << "hello there was an error 2" << endl;
+            return "invalid";
         }
     }
     if(!opperands.empty())
@@ -369,6 +390,7 @@ string ExpressionManager::infixToPostfix(string infixExpression)
         else
         {
             cout << "hello there was an error 3: " << sStr0 << endl;
+            return "invalid";
         }
     }
     while (!opperators.empty())

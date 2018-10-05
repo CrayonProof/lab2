@@ -9,9 +9,9 @@ postfixEvaluate +
 postfixEvaluate + 3 4 - 1
   1
 postfixEvaluate 4 5 + 6 0 * /
-  0
+  invalid
 postfixEvaluate } 78 97 + 6 / 5 +
-  34
+  invalid
 postfixToInfix 3 + 3 /
   ( 3 / 3 )
 postfixToInfix 3 3 4 +
@@ -23,26 +23,26 @@ postfixToInfix + 3 3
 postfixToInfix 3 3
   3
 postfixToInfix five plus three
-  
+  invalid
 postfixToInfix 4.3 2 +
   ( 4.3 + 2 )
 postfixToInfix 56 67 34 + - * 1
   1
 infixToPostfix { { 2 + 4 }
-  2 4 +
+  invalid
 infixToPostfix 2 + a
-  2 +
+  invalid
 infixToPostfix 3 $ 3
-  3 3 
+  invalid
 infixToPostfix 4 * ( 2 + 4 - ( 2 + )  ) - 4 / 5
-  Wow 4 2 4 + ( * 2 + ( ) 4 5 /
+  4 2 4 + 2 + - * 4 5 / -
 infixToPostfix 4 * ( 2 * + 4 - ( 2 + 2 ) ) - 4 / 5
-  Wow 4 2 * ( * 4 2 2 + ( - 4 - 5 
+  4 2 * 4 + 2 2 + - * 4 5 / -
 infixToPostfix ( 3 + 5 - ( 4 + 2 ) }
-  Wow 3 5 + ( 4 2 + ( 
+  invalid
 infixToPostfix 3 + 4.2
   3 4.2 +
 infixToPostfix -
   -
 infixToPostfix @
-  
+  invalid
