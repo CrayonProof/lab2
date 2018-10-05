@@ -238,8 +238,15 @@ string ExpressionManager::postfixToInfix(string postfixExpression)
     stack<string> opperands;
     vector<string> tokens = parseTokens(postfixExpression);
     
+    if (!is_of_some("1234567890", tokens.at(0).substr(0, 1)))
+    {
+        return "invalid";
+    }
+    
     for (string s : tokens)
     {
+        if(is_of_some(s, "."))
+            return "invalid";
         string sStr0 = s.substr(0, 1); //grabs the first character, maybe suppsoed to be first string?
         
         //cout << "sStr0: " << "\"" << s << "\"" << endl;
@@ -255,7 +262,7 @@ string ExpressionManager::postfixToInfix(string postfixExpression)
         }
         else if (is_of_some("+-/*%", sStr0))
         {
-            /*DEBUGGING PURPOSES ONLY, PRINT VECTOR
+            /*DEBUGGING PURPOSES ONLY, PRINT STACK
             
             vector<int> viewStack;
             
@@ -275,13 +282,17 @@ string ExpressionManager::postfixToInfix(string postfixExpression)
             DEBUGGING PURPOSES ONLY END
             */
             
-            if (opperands.size() > 1)
+            if (opperands.size() == 2)
             {
                 string opp2 = opperands.top();
                 opperands.pop();
                 string opp1 = opperands.top();
                 opperands.pop();
                 opperands.push("( " + opp1 + " " + sStr0 + " " + opp2 + " )");
+            }
+            else
+            {
+                return "invalid";
             }
         }
         else
@@ -290,8 +301,10 @@ string ExpressionManager::postfixToInfix(string postfixExpression)
             return "invalid";
         }
     }
-    if(!opperands.empty())
+    if(opperands.size() == 1)
         return (opperands.top());
+    else
+        return "invalid";
 }
 
 string ExpressionManager::postfixEvaluate(string postfixExpression)
@@ -347,6 +360,10 @@ string ExpressionManager::postfixEvaluate(string postfixExpression)
                 opperands.pop();
                 int opp1 = opperands.top();
                 opperands.pop();
+                
+                if ((opp2 == 0 && sStr0 == "/"))
+                    return "invalid";
+                    
                 opperands.push(evaluate(opp1, opp2, sStr0));
             }
         }
@@ -368,8 +385,16 @@ string ExpressionManager::infixToPostfix(string infixExpression)
     //opperators.pop();
     vector<string> tokens = parseTokens(infixExpression);
     
+    if (is_of_some("+-/*%", tokens.at(0).substr(0, 1)))
+    {
+        return "invalid";
+    }
+    
      for (string s : tokens)
     {
+        if(is_of_some(s, "."))
+            return "invalid";
+        
         string sStr0 = s.substr(0, 1);
         
         if (sStr0 == "")
